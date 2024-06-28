@@ -1,0 +1,17 @@
+{
+  "name": "backend",
+  "version": "1.0.0",
+  "main": "index.js",
+  "scripts": {
+    "lint": "npx @biomejs/biome lint --write ./src/**",
+    "format": "npx @biomejs/biome format --write ./src/**",
+    "check": "npx @biomejs/biome check --write ./src/**"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "description": "",
+  "devDependencies": {
+    "@biomejs/biome": "1.8.3"
+  }
+}
