@@ -1,8 +1,10 @@
+import "reflect-metadata";
+import "./container";
 import express, { json } from "express";
 import { config } from "./config";
-import { router } from "./routes";
-import { connectDB } from "./mongo";
 import { errorHandler } from "./middlewares/error-handler.middleware";
+import { connectDB } from "./mongo";
+import { router } from "./routes";
 
 const start = async () => {
 	await connectDB();

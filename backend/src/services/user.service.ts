@@ -1,13 +1,19 @@
+import bcrypt from "bcrypt";
+import jwt from "jsonwebtoken";
+import { inject, singleton } from "tsyringe";
 import { config } from "../config";
-import type { User } from "../entities/user";
+import type { User } from "../entities/user.entity";
 import { AppException } from "../exceptions/app.exception";
 import { LoginException } from "../exceptions/login.exception";
 import type { UserRepository } from "../repositories/user.repository";
-import bcrypt from "bcrypt";
-import jwt from "jsonwebtoken";
+import { InjectionTokens } from "../utils/injection-tokens";
 
+@singleton()
 export class UserService {
-	constructor(private userRepository: UserRepository) {}
+	constructor(
+		@inject(InjectionTokens.USER_REPOSITORY)
+		private userRepository: UserRepository,
+	) {}
 
 	async create(user: User) {
 		const existsUserWithEmail = await this.userRepository.findByEmail(

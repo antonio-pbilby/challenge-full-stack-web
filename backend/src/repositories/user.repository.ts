@@ -1,6 +1,8 @@
-import type { User } from "../entities/user";
+import { injectable } from "tsyringe";
+import type { User } from "../entities/user.entity";
 import { UserModel } from "../models/user.model";
 
+@injectable()
 export class UserRepository {
 	async create(user: User) {
 		const newUser = new UserModel(user);

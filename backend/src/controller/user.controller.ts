@@ -1,9 +1,15 @@
 import type { NextFunction, Request, Response } from "express";
-import type { UserService } from "../services/user.service";
+import { inject, singleton } from "tsyringe";
 import { config } from "../config";
+import type { UserService } from "../services/user.service";
+import { InjectionTokens } from "../utils/injection-tokens";
 
+@singleton()
 export class UserController {
-	constructor(private userService: UserService) {}
+	constructor(
+		@inject(InjectionTokens.USER_SERVICE)
+		private userService: UserService,
+	) {}
 
 	async create(req: Request, res: Response, next: NextFunction) {
 		try {

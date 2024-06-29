@@ -1,15 +1,15 @@
 import { Router } from "express";
-import { UserController } from "./controller";
+import { container } from "tsyringe";
+import type { UserController } from "./controller/user.controller";
 import { validateRequest } from "./middlewares/validation.middleware";
-import { createUserSchema } from "./schemas/user.schema";
-import { UserRepository } from "./repositories/user.repository";
-import { UserService } from "./services/user.service";
 import { loginSchema } from "./schemas/login.schema";
+import { createUserSchema } from "./schemas/user.schema";
+import { InjectionTokens } from "./utils/injection-tokens";
 
 export const router = Router();
-const userRepository = new UserRepository();
-const userService = new UserService(userRepository);
-const userController = new UserController(userService);
+const userController = container.resolve<UserController>(
+	InjectionTokens.USER_CONTROLLER,
+);
 
 router.post(
 	"/user",
