@@ -1,6 +1,7 @@
 import type { User } from "../entities/user";
 import { AppException } from "../exceptions/app.exception";
 import type { UserRepository } from "../repositories/user.repository";
+import bcrypt from "bcrypt";
 
 export class UserService {
 	constructor(private userRepository: UserRepository) {}
@@ -14,6 +15,11 @@ export class UserService {
 			throw new AppException(400, "A user already exists with this email");
 		}
 
-		await this.userRepository.create(user);
+		const encryptedPassword = await bcrypt.hash(user.password, 10);
+
+		await this.userRepository.create({
+			...user,
+			password: encryptedPassword,
+		});
 	}
 }
