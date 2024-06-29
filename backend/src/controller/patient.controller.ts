@@ -11,10 +11,10 @@ export class PatientController {
 		private patientService: PatientService,
 	) {}
 
-	async create(req: RequestWithUser, res: Response, next: NextFunction) {
+	async create(req: Request, res: Response, next: NextFunction) {
 		try {
 			const patientData = req.body;
-			const user = req.user.email;
+			const user = (req as RequestWithUser).user.email;
 			await this.patientService.create(patientData, user);
 
 			return res.status(201).send();
