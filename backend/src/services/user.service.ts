@@ -1,7 +1,10 @@
+import { config } from "../config";
 import type { User } from "../entities/user";
 import { AppException } from "../exceptions/app.exception";
+import { LoginException } from "../exceptions/login.exception";
 import type { UserRepository } from "../repositories/user.repository";
 import bcrypt from "bcrypt";
+import jwt from "jsonwebtoken";
 
 export class UserService {
 	constructor(private userRepository: UserRepository) {}
@@ -21,5 +24,27 @@ export class UserService {
 			...user,
 			password: encryptedPassword,
 		});
+	}
+
+	async login(email: string, password: string) {
+		const user = await this.userRepository.findByEmail(email);
+		if (!user) {
+			throw new LoginException();
+		}
+
+		const passwordsMatch = await bcrypt.compare(password, user.password);
+		if (!passwordsMatch) {
+			throw new LoginException();
+		}
+
+		const token = jwt.sign(
+			{
+				name: user.name,
+				email: user.email,
+			},
+			config.APP_SECRET,
+		);
+
+		return token;
 	}
 }

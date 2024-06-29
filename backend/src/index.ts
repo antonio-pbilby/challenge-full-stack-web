@@ -14,8 +14,8 @@ const start = async () => {
 	app.use("/", router);
 	app.use(errorHandler);
 
-	app.listen(config.serverPort, () => {
-		console.log(`Server running on port ${config.serverPort}`);
+	app.listen(config.PORT, () => {
+		console.log(`Server running on port ${config.PORT}`);
 	});
 };
 
