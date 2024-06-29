@@ -1,13 +1,20 @@
-import express from 'express';
-import 'dotenv';
-import { config } from './config';
+import express, { json } from "express";
+import { config } from "./config";
+import { router } from "./routes";
+import { connectDB } from "./mongo";
 
-const app = express();
+const start = async () => {
+	await connectDB();
 
-app.get('/', (req, res) => {
-  res.status(200).send('ok');
-});
+	const app = express();
 
-app.listen(config.serverPort, () => {
-  console.log(`listening on port ${config.serverPort}`);
-});
+	app.use(json());
+
+	app.use("/", router);
+
+	app.listen(config.serverPort, () => {
+		console.log(`Server running on port ${config.serverPort}`);
+	});
+};
+
+start();
