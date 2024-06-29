@@ -2,6 +2,7 @@ import type { NextFunction, Request, Response } from "express";
 import { inject, singleton } from "tsyringe";
 import type { PatientService } from "../services/patient.service";
 import { InjectionTokens } from "../utils/injection-tokens";
+import type { RequestWithUser } from "../interfaces/request-with-user.interface";
 
 @singleton()
 export class PatientController {
@@ -10,10 +11,11 @@ export class PatientController {
 		private patientService: PatientService,
 	) {}
 
-	async create(req: Request, res: Response, next: NextFunction) {
+	async create(req: RequestWithUser, res: Response, next: NextFunction) {
 		try {
 			const patientData = req.body;
-			await this.patientService.create(patientData);
+			const user = req.user.email;
+			await this.patientService.create(patientData, user);
 
 			return res.status(201).send();
 		} catch (err) {

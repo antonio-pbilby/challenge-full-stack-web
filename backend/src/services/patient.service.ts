@@ -10,7 +10,7 @@ export class PatientService {
 		private patientRepository: PatientRepository,
 	) {}
 
-	async create(patient: CreatePatientDTO) {
-		await this.patientRepository.create(patient);
+	async create(patient: CreatePatientDTO, auditUser: string) {
+		await this.patientRepository.create(patient, auditUser);
 	}
 }

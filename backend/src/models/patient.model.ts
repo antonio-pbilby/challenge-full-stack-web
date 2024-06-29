@@ -1,4 +1,5 @@
 import { Schema, model } from "mongoose";
+import { auditUtilSchema } from "./audit.util";
 
 const patientSchema = new Schema({
 	name: {
@@ -29,6 +30,7 @@ const patientSchema = new Schema({
 		type: String,
 		required: true,
 	},
+	...auditUtilSchema.obj,
 });
 
 export const PatientModel = model("Patient", patientSchema);
