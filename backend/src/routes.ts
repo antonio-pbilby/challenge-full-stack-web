@@ -7,6 +7,7 @@ import { createUserSchema } from "./schemas/create-user.schema";
 import { InjectionTokens } from "./utils/injection-tokens";
 import { createPatientSchema } from "./schemas/create-patient.schema";
 import type { PatientController } from "./controller/patient.controller";
+import { authenticate } from "./middlewares/authenticate.middleware";
 
 export const router = Router();
 const userController = container.resolve<UserController>(
@@ -30,6 +31,7 @@ router.post(
 
 router.post(
 	"/patient",
+	authenticate,
 	validateRequest(createPatientSchema),
 	patientController.create.bind(patientController),
 );

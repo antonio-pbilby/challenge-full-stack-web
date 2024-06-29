@@ -1,5 +1,5 @@
 import bcrypt from "bcrypt";
-import jwt from "jsonwebtoken";
+import jwt, { TokenExpiredError } from "jsonwebtoken";
 import { inject, singleton } from "tsyringe";
 import { config } from "../config";
 import { AppException } from "../exceptions/app.exception";
@@ -7,6 +7,7 @@ import { LoginException } from "../exceptions/login.exception";
 import type { UserRepository } from "../repositories/user.repository";
 import { InjectionTokens } from "../utils/injection-tokens";
 import type { CreateUserDTO } from "../schemas/create-user.schema";
+import { UnauthorizedException } from "../exceptions/unauthorized.exception";
 
 @singleton()
 export class UserService {
@@ -57,5 +58,17 @@ export class UserService {
 		);
 
 		return token;
+	}
+
+	async authenticate(token: string) {
+		try {
+			const data = jwt.verify(token, config.APP_SECRET);
+			return data;
+		} catch (err) {
+			if (err instanceof TokenExpiredError) {
+				throw new UnauthorizedException([{ error: "Token expired" }]);
+			}
+			throw new UnauthorizedException([{ error: "Invalid token" }]);
+		}
 	}
 }

@@ -5,6 +5,7 @@ import { config } from "./config";
 import { errorHandler } from "./middlewares/error-handler.middleware";
 import { connectDB } from "./mongo";
 import { router } from "./routes";
+import cookieParser from "cookie-parser";
 
 const start = async () => {
 	await connectDB();
@@ -12,6 +13,7 @@ const start = async () => {
 	const app = express();
 
 	app.use(json());
+	app.use(cookieParser());
 
 	app.use("/", router);
 	app.use(errorHandler);
