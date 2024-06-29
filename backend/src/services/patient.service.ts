@@ -2,7 +2,7 @@ import { inject, singleton } from "tsyringe";
 import type { CreatePatientDTO } from "../schemas/create-patient.schema";
 import type { PatientRepository } from "../repositories/patient.repository";
 import { InjectionTokens } from "../utils/injection-tokens";
-import type { Pagination } from "../interfaces/pagination.interface";
+import type { ListPacientsQuery } from "../schemas/list-patients.schema";
 
 @singleton()
 export class PatientService {
@@ -15,7 +15,7 @@ export class PatientService {
 		await this.patientRepository.create(patient, auditUser);
 	}
 
-	async list(pagination: Pagination) {
+	async list(pagination: ListPacientsQuery) {
 		return this.patientRepository.list(pagination);
 	}
 }

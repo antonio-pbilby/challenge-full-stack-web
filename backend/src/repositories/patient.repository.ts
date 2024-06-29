@@ -1,6 +1,6 @@
 import type { Patient } from "../entities/patient.entity";
-import type { Pagination } from "../interfaces/pagination.interface";
 import { PatientModel } from "../models/patient.model";
+import type { ListPacientsQuery } from "../schemas/list-patients.schema";
 import { createPaginatedResponse } from "../utils/create-paginated-response";
 
 export class PatientRepository {
@@ -14,11 +14,17 @@ export class PatientRepository {
 		return;
 	}
 
-	async list({ pageSize = 10, page = 1 }: Pagination) {
+	async list({ pageSize = 10, page = 1, name }: ListPacientsQuery) {
 		const skip = (page - 1) * pageSize;
+
+		const filter = {
+			...(name && { name: { $regex: name } }),
+			deletedAt: null,
+		};
+
 		const [patients, count] = await Promise.all([
-			PatientModel.find({ deletedAt: null }).skip(skip).limit(pageSize),
-			PatientModel.countDocuments({ deletedAt: null }),
+			PatientModel.find(filter).skip(skip).limit(pageSize),
+			PatientModel.countDocuments(filter),
 		]);
 
 		return createPaginatedResponse(patients, {

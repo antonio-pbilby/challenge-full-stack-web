@@ -3,7 +3,7 @@ import { inject, singleton } from "tsyringe";
 import type { PatientService } from "../services/patient.service";
 import { InjectionTokens } from "../utils/injection-tokens";
 import type { RequestWithUser } from "../interfaces/request-with-user.interface";
-import type { Pagination } from "../interfaces/pagination.interface";
+import type { ListPacientsQuery } from "../schemas/list-patients.schema";
 
 @singleton()
 export class PatientController {
@@ -27,8 +27,8 @@ export class PatientController {
 	async list(req: Request, res: Response, next: NextFunction) {
 		try {
 			// biome-ignore lint/suspicious/noExplicitAny: <Query is being validate in validation middleware>
-			const pagination = req.query as any as Pagination;
-			const patients = await this.patientService.list(pagination);
+			const query = req.query as any as ListPacientsQuery;
+			const patients = await this.patientService.list(query);
 			return res.status(200).json(patients);
 		} catch (err) {
 			next(err);

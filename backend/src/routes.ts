@@ -8,7 +8,7 @@ import { InjectionTokens } from "./utils/injection-tokens";
 import { createPatientSchema } from "./schemas/create-patient.schema";
 import type { PatientController } from "./controller/patient.controller";
 import { authenticate } from "./middlewares/authenticate.middleware";
-import { paginationSchema } from "./schemas/pagination.schema";
+import { listPacientsSchema } from "./schemas/list-patients.schema";
 
 export const router = Router();
 const userController = container.resolve<UserController>(
@@ -40,6 +40,6 @@ router.post(
 router.get(
 	"/patients",
 	authenticate,
-	validateRequest(paginationSchema),
+	validateRequest(listPacientsSchema),
 	patientController.list.bind(patientController),
 );
