@@ -33,4 +33,15 @@ export class PatientRepository {
 			totalItems: count,
 		});
 	}
+
+	async findById(id: string) {
+		return PatientModel.findById(id);
+	}
+
+	async delete(id: string, auditUser: string) {
+		await PatientModel.findByIdAndUpdate(id, {
+			deletedAt: new Date(),
+			deletedBy: auditUser,
+		});
+	}
 }

@@ -9,6 +9,7 @@ import { createPatientSchema } from "./schemas/create-patient.schema";
 import type { PatientController } from "./controller/patient.controller";
 import { authenticate } from "./middlewares/authenticate.middleware";
 import { listPacientsSchema } from "./schemas/list-patients.schema";
+import { deletePatientSchema } from "./schemas/delete-patient.schema";
 
 export const router = Router();
 const userController = container.resolve<UserController>(
@@ -42,4 +43,11 @@ router.get(
 	authenticate,
 	validateRequest(listPacientsSchema),
 	patientController.list.bind(patientController),
+);
+
+router.delete(
+	"/patients/:id",
+	authenticate,
+	validateRequest(deletePatientSchema),
+	patientController.delete.bind(patientController),
 );

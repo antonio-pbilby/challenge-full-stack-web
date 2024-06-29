@@ -3,6 +3,7 @@ import type { CreatePatientDTO } from "../schemas/create-patient.schema";
 import type { PatientRepository } from "../repositories/patient.repository";
 import { InjectionTokens } from "../utils/injection-tokens";
 import type { ListPacientsQuery } from "../schemas/list-patients.schema";
+import { AppException } from "../exceptions/app.exception";
 
 @singleton()
 export class PatientService {
@@ -17,5 +18,15 @@ export class PatientService {
 
 	async list(pagination: ListPacientsQuery) {
 		return this.patientRepository.list(pagination);
+	}
+
+	async delete(id: string, auditUser: string) {
+		const patientExists = await this.patientRepository.findById(id);
+
+		if (!patientExists) {
+			throw new AppException(400, "Patient does not exist");
+		}
+
+		await this.patientRepository.delete(id, auditUser);
 	}
 }

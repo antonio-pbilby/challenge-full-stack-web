@@ -29,7 +29,20 @@ export class PatientController {
 			// biome-ignore lint/suspicious/noExplicitAny: <Query is being validate in validation middleware>
 			const query = req.query as any as ListPacientsQuery;
 			const patients = await this.patientService.list(query);
+
 			return res.status(200).json(patients);
+		} catch (err) {
+			next(err);
+		}
+	}
+
+	async delete(req: Request, res: Response, next: NextFunction) {
+		try {
+			const user = (req as RequestWithUser).user.email;
+			const id = req.params.id;
+			await this.patientService.delete(id, user);
+
+			return res.status(204).send();
 		} catch (err) {
 			next(err);
 		}
