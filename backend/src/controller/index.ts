@@ -1,11 +1,12 @@
 import type { Request, Response } from "express";
-import { UserModel } from "../models/user.model";
+import type { UserService } from "../services/user.service";
 
 export class UserController {
+	constructor(private userService: UserService) {}
+
 	async create(req: Request, res: Response) {
 		const userData = req.body;
-		const newUser = new UserModel(userData);
-		await newUser.save();
+		await this.userService.create(userData);
 		return res.status(201).send();
 	}
 }
