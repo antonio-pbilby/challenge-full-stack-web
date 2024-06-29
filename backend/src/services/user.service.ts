@@ -2,11 +2,11 @@ import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 import { inject, singleton } from "tsyringe";
 import { config } from "../config";
-import type { User } from "../entities/user.entity";
 import { AppException } from "../exceptions/app.exception";
 import { LoginException } from "../exceptions/login.exception";
 import type { UserRepository } from "../repositories/user.repository";
 import { InjectionTokens } from "../utils/injection-tokens";
+import type { CreateUserDTO } from "../schemas/user.schema";
 
 @singleton()
 export class UserService {
@@ -15,7 +15,12 @@ export class UserService {
 		private userRepository: UserRepository,
 	) {}
 
-	async create(user: User) {
+	async create(user: CreateUserDTO) {
+		const passwordsMatch = user.password === user.confirmPassword;
+		if (!passwordsMatch) {
+			throw new AppException(400, "Passwords do not match");
+		}
+
 		const existsUserWithEmail = await this.userRepository.findByEmail(
 			user.email,
 		);

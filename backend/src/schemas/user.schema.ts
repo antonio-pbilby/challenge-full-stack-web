@@ -14,5 +14,8 @@ export const createUserSchema = z.object({
 				/[^a-zA-Z0-9]/,
 				"Password must contain at least one special character",
 			),
+		confirmPassword: z.string(),
 	}),
 });
+
+export type CreateUserDTO = z.infer<typeof createUserSchema>["body"];
