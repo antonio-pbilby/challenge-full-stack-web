@@ -6,7 +6,7 @@ import { AppException } from "../exceptions/app.exception";
 import { LoginException } from "../exceptions/login.exception";
 import type { UserRepository } from "../repositories/user.repository";
 import { InjectionTokens } from "../utils/injection-tokens";
-import type { CreateUserDTO } from "../schemas/user.schema";
+import type { CreateUserDTO } from "../schemas/create-user.schema";
 
 @singleton()
 export class UserService {
