@@ -2,6 +2,8 @@
 import { Button } from "@/components/Button";
 import { Input } from "@/components/Input";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { useMutation } from "@tanstack/react-query";
+import axios from "axios";
 import Link from "next/link";
 import { SubmitHandler, useForm } from "react-hook-form";
 import { z } from "zod";
@@ -26,8 +28,20 @@ export default function Register() {
     }
   });
 
+  const { mutate: createAccount } = useMutation({
+    mutationFn: async (data: RegisterInputs) => {
+      await axios.post('http://localhost:3000/user', data);
+    },
+    onSuccess: () => {
+      alert('Registrado com sucesso')
+    },
+    onError: () => {
+      alert('Erro ao registrar')
+    }
+  });
+
   const onSubmit: SubmitHandler<RegisterInputs> = (data) => {
-    console.log(data);
+    createAccount(data);
   }
 
   return (<main className="flex justify-center align-middle h-screen w-screen">
