@@ -2,7 +2,10 @@
 import { Button } from "@/components/Button";
 import { Input } from "@/components/Input";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { useMutation } from "@tanstack/react-query";
+import axios, { AxiosError } from "axios";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { SubmitHandler, useForm } from "react-hook-form";
 import { z } from "zod";
 
@@ -11,10 +14,10 @@ const loginSchema = z.object({
   password: z.string(),
 });
 
-type RegisterInputs = z.infer<typeof loginSchema>;
+type LoginInputs = z.infer<typeof loginSchema>;
 
 export default function Login() {
-  const { register, handleSubmit, formState: { errors } } = useForm<RegisterInputs>({
+  const { register, handleSubmit, formState: { errors } } = useForm<LoginInputs>({
     resolver: zodResolver(loginSchema),
     defaultValues: {
       email: '',
@@ -22,8 +25,25 @@ export default function Login() {
     }
   });
 
-  const onSubmit: SubmitHandler<RegisterInputs> = (data) => {
-    console.log(data);
+  const router = useRouter();
+
+  const { mutate: login } = useMutation({
+    mutationFn: async (data: LoginInputs) => {
+      await axios.post('http://localhost:3000/login', data);
+    },
+    onSuccess: () => {
+      router.push('/');
+    },
+    onError: (error) => {
+      if (error instanceof AxiosError) {
+        return alert(`Failed to login. ${error.response?.data.message}`)
+      }
+      return alert('Failed to login');
+    }
+  })
+
+  const onSubmit: SubmitHandler<LoginInputs> = (data) => {
+    login(data);
   }
 
   return (<main className="flex justify-center align-middle h-screen w-screen">

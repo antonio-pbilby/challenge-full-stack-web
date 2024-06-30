@@ -3,8 +3,9 @@ import { Button } from "@/components/Button";
 import { Input } from "@/components/Input";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useMutation } from "@tanstack/react-query";
-import axios from "axios";
+import axios, { AxiosError } from "axios";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { SubmitHandler, useForm } from "react-hook-form";
 import { z } from "zod";
 
@@ -30,7 +31,7 @@ const registerSchema = z.object({
 type RegisterInputs = z.infer<typeof registerSchema>;
 
 export default function Register() {
-  const { register, handleSubmit, formState: { errors } } = useForm<RegisterInputs>({
+  const { register, handleSubmit, formState: { errors, isSubmitting } } = useForm<RegisterInputs>({
     resolver: zodResolver(registerSchema),
     defaultValues: {
       confirmPassword: '',
@@ -40,16 +41,23 @@ export default function Register() {
     }
   });
 
+  const router = useRouter();
+
   const { mutate: createAccount } = useMutation({
     mutationFn: async (data: RegisterInputs) => {
+      console.log('foi no react query')
       await axios.post('http://localhost:3000/user', data);
     },
     onSuccess: () => {
-      alert('Registrado com sucesso')
+      alert('Registered successfully');
+      router.push('/login')
     },
-    onError: () => {
-      alert('Erro ao registrar')
-    }
+    onError: (error) => {
+      if (error instanceof AxiosError) {
+        return alert(`Failed to register. ${error.response?.data.message}`)
+      }
+      return alert('Failed to register');
+    },
   });
 
   const onSubmit: SubmitHandler<RegisterInputs> = (data) => {
@@ -84,7 +92,7 @@ export default function Register() {
           {errors.confirmPassword && <Input.Error>{errors.confirmPassword.message}</Input.Error>}
         </Input.Wrapper>
 
-        <Button.Primary type="submit">Register</Button.Primary>
+        <Button.Primary type="submit" disabled={isSubmitting}>Register</Button.Primary>
       </form>
       <span>Already have an account? <Link href={"/login"} className="underline text-lime-700">Login</Link></span>
 
