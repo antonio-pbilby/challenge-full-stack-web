@@ -1,5 +1,3 @@
-version: '3.8'
-
 services:
   mongo:
     image: mongo:latest
@@ -12,11 +10,11 @@ services:
   app:
     build:
       context: .
-      dockerfile: Dockerfile
+      dockerfile: ./backend/Dockerfile
     ports:
       - "3000:3000"
     env_file:
-      - .env
+      - ./backend/.env
 
 volumes:
   mongo-data:
