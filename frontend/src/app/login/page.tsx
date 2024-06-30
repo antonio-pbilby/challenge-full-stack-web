@@ -1,9 +1,10 @@
 'use client'
 import { Button } from "@/components/Button";
 import { Input } from "@/components/Input";
+import { api } from "@/utils/axios";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useMutation } from "@tanstack/react-query";
-import axios, { AxiosError } from "axios";
+import { AxiosError } from "axios";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { SubmitHandler, useForm } from "react-hook-form";
@@ -29,10 +30,10 @@ export default function Login() {
 
   const { mutate: login } = useMutation({
     mutationFn: async (data: LoginInputs) => {
-      await axios.post('http://localhost:3000/login', data);
+      await api.post('/login', data);
     },
     onSuccess: () => {
-      router.push('/');
+      router.push('/platform/patients');
     },
     onError: (error) => {
       if (error instanceof AxiosError) {

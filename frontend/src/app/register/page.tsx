@@ -1,9 +1,10 @@
 'use client'
 import { Button } from "@/components/Button";
 import { Input } from "@/components/Input";
+import { api } from "@/utils/axios";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useMutation } from "@tanstack/react-query";
-import axios, { AxiosError } from "axios";
+import { AxiosError } from "axios";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { SubmitHandler, useForm } from "react-hook-form";
@@ -46,7 +47,7 @@ export default function Register() {
   const { mutate: createAccount } = useMutation({
     mutationFn: async (data: RegisterInputs) => {
       console.log('foi no react query')
-      await axios.post('http://localhost:3000/user', data);
+      await api.post('/user', data);
     },
     onSuccess: () => {
       alert('Registered successfully');
