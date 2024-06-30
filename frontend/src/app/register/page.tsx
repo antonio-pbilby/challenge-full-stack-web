@@ -9,10 +9,22 @@ import { SubmitHandler, useForm } from "react-hook-form";
 import { z } from "zod";
 
 const registerSchema = z.object({
-  name: z.string(),
+  name: z.string().min(1),
   email: z.string().email(),
-  password: z.string(),
+  password: z
+    .string()
+    .min(8, "Password must be at least 8 characters long")
+    .regex(/[a-z]/, "Password must contain at least one lowercase letter")
+    .regex(/[A-Z]/, "Password must contain at least one uppercase letter")
+    .regex(/\d/, "Password must contain at least one number")
+    .regex(
+      /[^a-zA-Z0-9]/,
+      "Password must contain at least one special character",
+    ),
   confirmPassword: z.string(),
+}).refine((data) => data.password === data.confirmPassword, {
+  message: "Passwords do not match",
+  path: ['confirmPassword']
 });
 
 type RegisterInputs = z.infer<typeof registerSchema>;
