@@ -31,7 +31,7 @@ export default function PatientsPage() {
   const queryClient = useQueryClient();
   const [pagination, setPagination] = useState({
     page: 1,
-    pageSize: 15
+    pageSize: 5
   });
 
   const { data: patientsResponse, isLoading, isFetched } = useQuery<PatientsResponse>({
@@ -47,6 +47,8 @@ export default function PatientsPage() {
     },
     queryKey: ['patients', pagination.page, pagination.pageSize]
   });
+
+  const totalPages = isFetched && patientsResponse?.pagination && Math.ceil(patientsResponse?.pagination.totalItems / pagination.pageSize);
 
   const { mutate: deletePatient } = useMutation({
     mutationFn: async (id: string) => {
@@ -64,7 +66,7 @@ export default function PatientsPage() {
       }
       return alert(`Failed to delete patient`);
     }
-  })
+  });
 
   return (
     <>
@@ -119,8 +121,8 @@ export default function PatientsPage() {
               <TableCell>{gender}</TableCell>
               <TableCell>{healthInsuranceId}</TableCell>
               <TableCell>
-                <Button onClick={() => deletePatient(id)}>
-                  <Trash />
+                <Button onClick={() => deletePatient(id)} size="icon" variant={"outline"}>
+                  <Trash className="h-4 w-4" />
                 </Button>
               </TableCell>
             </TableRow>)
@@ -130,6 +132,39 @@ export default function PatientsPage() {
           </TableRow>}
         </TableBody>
       </Table>
+
+      {isLoading && <Skeleton className="h-11" />}
+      {isFetched && !!totalPages &&
+        <div className="flex justify-center gap-1">
+          <Button
+            variant={"ghost"}
+            disabled={pagination.page === 1}
+            onClick={() => setPagination((value) => ({ ...value, page: value.page - 1 }))}
+          >
+            Previous
+          </Button>
+          {Array.from({ length: totalPages }, (_, idx) => idx + 1)
+            .map((page) => {
+              return (
+                <Button
+                  key={`page-${page}`}
+                  variant={page === pagination.page ? "default" : "ghost"}
+                  disabled={page === pagination.page}
+                  onClick={() => setPagination((value) => ({ ...value, page }))}
+                >
+                  {page}
+                </Button>
+              )
+            })}
+          <Button
+            variant={"ghost"}
+            disabled={pagination.page === totalPages}
+            onClick={() => setPagination((value) => ({ ...value, page: value.page + 1 }))}
+          >
+            Next
+          </Button>
+        </div >
+      }
     </>
   )
 }
