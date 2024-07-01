@@ -1,15 +1,15 @@
 import { inject, singleton } from "tsyringe";
 import type { CreatePatientDTO } from "../schemas/create-patient.schema";
-import type { PatientRepository } from "../repositories/patient.repository";
 import { InjectionTokens } from "../utils/injection-tokens";
 import type { ListPacientsQuery } from "../schemas/list-patients.schema";
 import { AppException } from "../exceptions/app.exception";
+import { PatientRepositoryInterface } from "../repositories/patient.repository.interface";
 
 @singleton()
 export class PatientService {
 	constructor(
 		@inject(InjectionTokens.PATIENT_REPOSITORY)
-		private patientRepository: PatientRepository,
+		private patientRepository: PatientRepositoryInterface,
 	) {}
 
 	async create(patient: CreatePatientDTO, auditUser: string) {

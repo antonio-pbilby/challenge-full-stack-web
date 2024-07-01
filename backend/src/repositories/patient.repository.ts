@@ -1,10 +1,12 @@
 import type { Patient } from "../entities/patient.entity";
 import { PatientModel } from "../models/patient.model";
+import { CreatePatientDTO } from "../schemas/create-patient.schema";
 import type { ListPacientsQuery } from "../schemas/list-patients.schema";
-import { createPaginatedResponse } from "../utils/create-paginated-response";
+import { PaginatedResponse, createPaginatedResponse } from "../utils/create-paginated-response";
+import { PatientRepositoryInterface } from "./patient.repository.interface";
 
-export class PatientRepository {
-	async create(patient: Patient, auditUser: string) {
+export class PatientRepository implements PatientRepositoryInterface {
+	async create(patient: CreatePatientDTO, auditUser: string): Promise<void> {
 		const newPatient = new PatientModel({
 			...patient,
 			createdBy: auditUser,
@@ -14,7 +16,7 @@ export class PatientRepository {
 		return;
 	}
 
-	async list({ pageSize = 10, page = 1, name }: ListPacientsQuery) {
+	async list({ pageSize = 10, page = 1, name }: ListPacientsQuery): Promise<PaginatedResponse<Patient>> {
 		const skip = (page - 1) * pageSize;
 
 		const filter = {
@@ -27,18 +29,22 @@ export class PatientRepository {
 			PatientModel.countDocuments(filter),
 		]);
 
-		return createPaginatedResponse(patients, {
+		const mappedPatients = patients.map((patient) => ({...patient.toObject(), _id: String(patient.id)}));
+
+		return createPaginatedResponse(mappedPatients, {
 			page,
 			pageSize,
 			totalItems: count,
 		});
 	}
 
-	async findById(id: string) {
-		return PatientModel.findById(id);
+	async findById(id: string): Promise<Patient | undefined> {
+		const patient = await PatientModel.findById(id);
+		patient?._id;
+		return patient?.toObject();
 	}
 
-	async find(filter: Partial<Pick<Patient, 'email' | 'document' | 'healthInsuranceId'>>) {
+	async find(filter: Partial<Pick<Patient, 'email' | 'document' | 'healthInsuranceId'>>): Promise<Patient | undefined> {
 		const mongooseFilter = {
 			...(filter.document && {document: filter.document}),
 			...(filter.email && {email: filter.email}),
@@ -47,10 +53,10 @@ export class PatientRepository {
 
 		const patient = await PatientModel.findOne(mongooseFilter);
 
-		return patient;
+		return patient?.toObject();
 	}
 
-	async delete(id: string, auditUser: string) {
+	async delete(id: string, auditUser: string): Promise<void> {
 		await PatientModel.findByIdAndUpdate(id, {
 			deletedAt: new Date(),
 			deletedBy: auditUser,

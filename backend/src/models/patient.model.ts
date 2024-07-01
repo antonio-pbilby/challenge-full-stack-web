@@ -1,5 +1,4 @@
 import { Schema, model } from "mongoose";
-import { auditUtilSchema } from "./audit.util";
 
 const patientSchema = new Schema({
 	name: {
@@ -27,7 +26,30 @@ const patientSchema = new Schema({
 		type: String,
 		required: true,
 	},
-	...auditUtilSchema.obj,
+	createdAt: {
+		type: Date,
+		default: Date.now,
+	},
+	createdBy: {
+		type: String,
+		required: true,
+	},
+	updatedAt: {
+		type: Date,
+		default: Date.now,
+	},
+	updatedBy: {
+		type: String,
+		required: true,
+	},
+	deletedAt: {
+		type: Date,
+		default: null,
+	},
+	deletedBy: {
+		type: String,
+		default: null,
+	},
 });
 
 export const PatientModel = model("Patient", patientSchema);
