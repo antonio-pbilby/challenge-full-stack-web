@@ -13,6 +13,22 @@ export class PatientService {
 	) {}
 
 	async create(patient: CreatePatientDTO, auditUser: string) {
+		const [existsWithEmail, existsWithDocument, existsWithHealthInsuranceId] = await Promise.all([
+			this.patientRepository.find({email: patient.email}),
+			this.patientRepository.find({document: patient.document}),
+			this.patientRepository.find({healthInsuranceId: patient.healthInsuranceId}),
+		]);
+
+		if (existsWithEmail) {
+			throw new AppException(400, 'A patient already exists with this email');
+		}
+		if (existsWithDocument) {
+			throw new AppException(400, 'A patient already exists with this document');
+		}
+		if (existsWithHealthInsuranceId) {
+			throw new AppException(400, 'A patient already exists with this health insurance id');
+		}
+
 		await this.patientRepository.create(patient, auditUser);
 	}
 

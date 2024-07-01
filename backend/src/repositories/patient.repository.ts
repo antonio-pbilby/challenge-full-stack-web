@@ -38,6 +38,18 @@ export class PatientRepository {
 		return PatientModel.findById(id);
 	}
 
+	async find(filter: Partial<Pick<Patient, 'email' | 'document' | 'healthInsuranceId'>>) {
+		const mongooseFilter = {
+			...(filter.document && {document: filter.document}),
+			...(filter.email && {email: filter.email}),
+			...(filter.healthInsuranceId && {healthInsuranceId: filter.healthInsuranceId}),
+		};
+
+		const patient = await PatientModel.findOne(mongooseFilter);
+
+		return patient;
+	}
+
 	async delete(id: string, auditUser: string) {
 		await PatientModel.findByIdAndUpdate(id, {
 			deletedAt: new Date(),
