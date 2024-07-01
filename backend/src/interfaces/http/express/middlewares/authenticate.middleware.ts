@@ -1,8 +1,8 @@
 import type { NextFunction, Request, Response } from "express";
 import { container } from "tsyringe";
-import { UnauthorizedException } from "../exceptions/unauthorized.exception";
-import type { UserService } from "../services/user.service";
-import { InjectionTokens } from "../utils/injection-tokens";
+import { UnauthorizedException } from "../../../../application/exceptions/unauthorized.exception";
+import type { UserService } from "../../../../application/services/user.service";
+import { InjectionTokens } from "../../../../injection-tokens";
 
 export const authenticate = async (
 	req: Request,

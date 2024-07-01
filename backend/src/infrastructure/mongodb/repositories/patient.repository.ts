@@ -1,12 +1,10 @@
-import type { Patient } from "../entities/patient.entity";
+import { createPaginatedResponse } from "../../../application/utils/create-paginated-response";
+import type { Patient } from "../../../domain/patients/entity";
+import type { PatientRepositoryInterface } from "../../../domain/patients/repository";
+import type { CreatePatientDTO } from "../../../interfaces/http/validation/create-patient.schema";
+import type { ListPacientsQuery } from "../../../interfaces/http/validation/list-patients.schema";
+import type { PaginatedResponse } from "../../../interfaces/pagination.interface";
 import { PatientModel } from "../models/patient.model";
-import type { CreatePatientDTO } from "../schemas/create-patient.schema";
-import type { ListPacientsQuery } from "../schemas/list-patients.schema";
-import {
-	type PaginatedResponse,
-	createPaginatedResponse,
-} from "../utils/create-paginated-response";
-import type { PatientRepositoryInterface } from "./patient.repository.interface";
 
 export class PatientRepository implements PatientRepositoryInterface {
 	async create(patient: CreatePatientDTO, auditUser: string): Promise<void> {

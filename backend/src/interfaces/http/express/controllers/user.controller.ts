@@ -1,8 +1,8 @@
 import type { NextFunction, Request, Response } from "express";
 import { inject, singleton } from "tsyringe";
-import { config } from "../config";
-import type { UserService } from "../services/user.service";
-import { InjectionTokens } from "../utils/injection-tokens";
+import type { UserService } from "../../../../application/services/user.service";
+import { config } from "../../../../config";
+import { InjectionTokens } from "../../../../injection-tokens";
 
 @singleton()
 export class UserController {

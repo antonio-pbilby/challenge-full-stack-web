@@ -1,11 +1,13 @@
 import { container } from "tsyringe";
-import { PatientController } from "./controller/patient.controller";
-import { UserController } from "./controller/user.controller";
-import { PatientRepository } from "./repositories/patient.repository";
-import { UserRepository } from "./repositories/user.repository";
-import { PatientService } from "./services/patient.service";
-import { UserService } from "./services/user.service";
-import { InjectionTokens } from "./utils/injection-tokens";
+import { PatientService } from "./application/services/patient.service";
+import { UserService } from "./application/services/user.service";
+import { EncryptionProvider } from "./infrastructure/bcrypt/bcrypt.provider";
+import { TokenProvider } from "./infrastructure/jwt/token.provider";
+import { PatientRepository } from "./infrastructure/mongodb/repositories/patient.repository";
+import { UserRepository } from "./infrastructure/mongodb/repositories/user.repository";
+import { InjectionTokens } from "./injection-tokens";
+import { PatientController } from "./interfaces/http/express/controllers/patient.controller";
+import { UserController } from "./interfaces/http/express/controllers/user.controller";
 
 container.register(InjectionTokens.USER_REPOSITORY, {
 	useClass: UserRepository,
@@ -25,4 +27,11 @@ container.register(InjectionTokens.PATIENT_SERVICE, {
 });
 container.register(InjectionTokens.PATIENT_REPOSITORY, {
 	useClass: PatientRepository,
+});
+
+container.register(InjectionTokens.TOKEN_PROVIDER, {
+	useClass: TokenProvider,
+});
+container.register(InjectionTokens.ENCRYPTION_PROVIDER, {
+	useClass: EncryptionProvider,
 });

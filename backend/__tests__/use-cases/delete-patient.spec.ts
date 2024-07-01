@@ -1,8 +1,8 @@
 import 'reflect-metadata'
 import { it, describe, vi, expect } from 'vitest';
-import { PatientService } from '../../src/services/patient.service';
+import { PatientService } from '../../src/application/services/patient.service';
 import { FakePatientRepository } from '../fake-repositories/patient.fake-repository';
-import { AppException } from '../../src/exceptions/app.exception';
+import { AppException } from '../../src/application/exceptions/app.exception';
 
 describe('Delete Patient', () => {
   let patientRepository = new FakePatientRepository();

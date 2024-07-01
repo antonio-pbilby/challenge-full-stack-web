@@ -1,9 +1,9 @@
 import { inject, singleton } from "tsyringe";
+import type { PatientRepositoryInterface } from "../../domain/patients/repository";
+import { InjectionTokens } from "../../injection-tokens";
+import type { CreatePatientDTO } from "../../interfaces/http/validation/create-patient.schema";
+import type { ListPacientsQuery } from "../../interfaces/http/validation/list-patients.schema";
 import { AppException } from "../exceptions/app.exception";
-import type { PatientRepositoryInterface } from "../repositories/patient.repository.interface";
-import type { CreatePatientDTO } from "../schemas/create-patient.schema";
-import type { ListPacientsQuery } from "../schemas/list-patients.schema";
-import { InjectionTokens } from "../utils/injection-tokens";
 
 @singleton()
 export class PatientService {

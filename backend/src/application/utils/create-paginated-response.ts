@@ -1,4 +1,7 @@
-import { PaginatedResponse, PaginationResponse } from "../interfaces/pagination.interface";
+import type {
+	PaginatedResponse,
+	PaginationResponse,
+} from "../../interfaces/pagination.interface";
 
 export const createPaginatedResponse = <T>(
 	data: T[],

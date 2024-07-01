@@ -1,15 +1,15 @@
 import { Router } from "express";
 import { container } from "tsyringe";
-import type { PatientController } from "./controller/patient.controller";
-import type { UserController } from "./controller/user.controller";
+import { InjectionTokens } from "../../../injection-tokens";
+import { createPatientSchema } from "../validation/create-patient.schema";
+import { createUserSchema } from "../validation/create-user.schema";
+import { deletePatientSchema } from "../validation/delete-patient.schema";
+import { listPacientsSchema } from "../validation/list-patients.schema";
+import { loginSchema } from "../validation/login.schema";
+import type { PatientController } from "./controllers/patient.controller";
+import type { UserController } from "./controllers/user.controller";
 import { authenticate } from "./middlewares/authenticate.middleware";
 import { validateRequest } from "./middlewares/validation.middleware";
-import { createPatientSchema } from "./schemas/create-patient.schema";
-import { createUserSchema } from "./schemas/create-user.schema";
-import { deletePatientSchema } from "./schemas/delete-patient.schema";
-import { listPacientsSchema } from "./schemas/list-patients.schema";
-import { loginSchema } from "./schemas/login.schema";
-import { InjectionTokens } from "./utils/injection-tokens";
 
 export const router = Router();
 const userController = container.resolve<UserController>(

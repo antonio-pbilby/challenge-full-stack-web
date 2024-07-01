@@ -1,7 +1,7 @@
 import type { NextFunction, Request, Response } from "express";
 import { ZodError, type ZodSchema } from "zod";
-import { AppException } from "../exceptions/app.exception";
-import { ValidationException } from "../exceptions/validation.exception";
+import { AppException } from "../../../../application/exceptions/app.exception";
+import { ValidationException } from "../../../../application/exceptions/validation.exception";
 
 export const validateRequest = (schema: ZodSchema) => {
 	return (req: Request, res: Response, next: NextFunction) => {
@@ -16,7 +16,7 @@ export const validateRequest = (schema: ZodSchema) => {
 			next();
 		} catch (err) {
 			if (err instanceof ZodError) {
-				throw new ValidationException(err);
+				throw new ValidationException(err.issues);
 			}
 			throw new AppException();
 		}

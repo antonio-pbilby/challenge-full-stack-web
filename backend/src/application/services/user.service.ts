@@ -1,19 +1,25 @@
-import bcrypt from "bcrypt";
-import jwt, { TokenExpiredError } from "jsonwebtoken";
 import { inject, singleton } from "tsyringe";
-import { config } from "../config";
+import { config } from "../../config";
+import type { EncryptionProvider } from "../../infrastructure/bcrypt/bcrypt.provider";
+import type { TokenProvider } from "../../infrastructure/jwt/token.provider";
+import type { UserRepository } from "../../infrastructure/mongodb/repositories/user.repository";
+import { InjectionTokens } from "../../injection-tokens";
+import type { CreateUserDTO } from "../../interfaces/http/validation/create-user.schema";
 import { AppException } from "../exceptions/app.exception";
 import { LoginException } from "../exceptions/login.exception";
 import { UnauthorizedException } from "../exceptions/unauthorized.exception";
-import type { UserRepository } from "../repositories/user.repository";
-import type { CreateUserDTO } from "../schemas/create-user.schema";
-import { InjectionTokens } from "../utils/injection-tokens";
 
 @singleton()
 export class UserService {
 	constructor(
 		@inject(InjectionTokens.USER_REPOSITORY)
 		private userRepository: UserRepository,
+
+		@inject(InjectionTokens.TOKEN_PROVIDER)
+		private tokenProvider: TokenProvider,
+
+		@inject(InjectionTokens.ENCRYPTION_PROVIDER)
+		private encryptionProvider: EncryptionProvider,
 	) {}
 
 	async create(user: CreateUserDTO) {
@@ -30,7 +36,9 @@ export class UserService {
 			throw new AppException(400, "A user already exists with this email");
 		}
 
-		const encryptedPassword = await bcrypt.hash(user.password, 10);
+		const encryptedPassword = await this.encryptionProvider.encrypt(
+			user.password,
+		);
 
 		await this.userRepository.create({
 			...user,
@@ -44,12 +52,15 @@ export class UserService {
 			throw new LoginException();
 		}
 
-		const passwordsMatch = await bcrypt.compare(password, user.password);
+		const passwordsMatch = await this.encryptionProvider.compare(
+			password,
+			user.password,
+		);
 		if (!passwordsMatch) {
 			throw new LoginException();
 		}
 
-		const token = jwt.sign(
+		const token = this.tokenProvider.sign(
 			{
 				name: user.name,
 				email: user.email,
@@ -62,12 +73,9 @@ export class UserService {
 
 	async authenticate(token: string) {
 		try {
-			const data = jwt.verify(token, config.APP_SECRET);
+			const data = this.tokenProvider.verify(token, config.APP_SECRET);
 			return data;
 		} catch (err) {
-			if (err instanceof TokenExpiredError) {
-				throw new UnauthorizedException([{ error: "Token expired" }]);
-			}
 			throw new UnauthorizedException([{ error: "Invalid token" }]);
 		}
 	}

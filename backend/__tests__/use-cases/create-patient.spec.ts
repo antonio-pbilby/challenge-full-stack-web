@@ -1,10 +1,10 @@
 import 'reflect-metadata'
 import { it, describe, vi, expect } from 'vitest';
-import { PatientService } from '../../src/services/patient.service';
+import { PatientService } from '../../src/application/services/patient.service';
 import { FakePatientRepository } from '../fake-repositories/patient.fake-repository';
-import { Patient } from '../../src/entities/patient.entity';
-import { CreatePatientDTO } from '../../src/schemas/create-patient.schema';
-import { AppException } from '../../src/exceptions/app.exception';
+import { Patient } from '../../src/domain/patients/entity';
+import { CreatePatientDTO } from '../../src/interfaces/http/validation/create-patient.schema';
+import { AppException } from '../../src/application/exceptions/app.exception';
 
 describe('Create Patient', () => {
   let patientRepository = new FakePatientRepository();

@@ -4,9 +4,9 @@ import cookieParser from "cookie-parser";
 import cors from "cors";
 import express, { json } from "express";
 import { config } from "./config";
-import { errorHandler } from "./middlewares/error-handler.middleware";
-import { connectDB } from "./mongo";
-import { router } from "./routes";
+import { connectDB } from "./infrastructure/mongodb/connect";
+import { errorHandler } from "./interfaces/http/express/middlewares/error-handler.middleware";
+import { router } from "./interfaces/http/express/routes";
 
 const start = async () => {
 	await connectDB();
