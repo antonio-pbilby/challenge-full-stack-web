@@ -1,13 +1,4 @@
-interface PaginationResponse {
-	page: number;
-	pageSize: number;
-	totalItems: number;
-}
-
-export interface PaginatedResponse<T> {
-	pagination: PaginationResponse;
-	data: T[];
-}
+import { PaginatedResponse, PaginationResponse } from "../interfaces/pagination.interface";
 
 export const createPaginatedResponse = <T>(
 	data: T[],
