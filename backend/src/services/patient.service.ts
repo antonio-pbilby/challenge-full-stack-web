@@ -1,9 +1,9 @@
 import { inject, singleton } from "tsyringe";
-import type { CreatePatientDTO } from "../schemas/create-patient.schema";
-import { InjectionTokens } from "../utils/injection-tokens";
-import type { ListPacientsQuery } from "../schemas/list-patients.schema";
 import { AppException } from "../exceptions/app.exception";
-import { PatientRepositoryInterface } from "../repositories/patient.repository.interface";
+import type { PatientRepositoryInterface } from "../repositories/patient.repository.interface";
+import type { CreatePatientDTO } from "../schemas/create-patient.schema";
+import type { ListPacientsQuery } from "../schemas/list-patients.schema";
+import { InjectionTokens } from "../utils/injection-tokens";
 
 @singleton()
 export class PatientService {
@@ -13,20 +13,29 @@ export class PatientService {
 	) {}
 
 	async create(patient: CreatePatientDTO, auditUser: string) {
-		const [existsWithEmail, existsWithDocument, existsWithHealthInsuranceId] = await Promise.all([
-			this.patientRepository.find({email: patient.email}),
-			this.patientRepository.find({document: patient.document}),
-			this.patientRepository.find({healthInsuranceId: patient.healthInsuranceId}),
-		]);
+		const [existsWithEmail, existsWithDocument, existsWithHealthInsuranceId] =
+			await Promise.all([
+				this.patientRepository.find({ email: patient.email }),
+				this.patientRepository.find({ document: patient.document }),
+				this.patientRepository.find({
+					healthInsuranceId: patient.healthInsuranceId,
+				}),
+			]);
 
 		if (existsWithEmail) {
-			throw new AppException(400, 'A patient already exists with this email');
+			throw new AppException(400, "A patient already exists with this email");
 		}
 		if (existsWithDocument) {
-			throw new AppException(400, 'A patient already exists with this document');
+			throw new AppException(
+				400,
+				"A patient already exists with this document",
+			);
 		}
 		if (existsWithHealthInsuranceId) {
-			throw new AppException(400, 'A patient already exists with this health insurance id');
+			throw new AppException(
+				400,
+				"A patient already exists with this health insurance id",
+			);
 		}
 
 		await this.patientRepository.create(patient, auditUser);

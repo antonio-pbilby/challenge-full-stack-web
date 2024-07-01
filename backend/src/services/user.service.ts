@@ -4,10 +4,10 @@ import { inject, singleton } from "tsyringe";
 import { config } from "../config";
 import { AppException } from "../exceptions/app.exception";
 import { LoginException } from "../exceptions/login.exception";
-import type { UserRepository } from "../repositories/user.repository";
-import { InjectionTokens } from "../utils/injection-tokens";
-import type { CreateUserDTO } from "../schemas/create-user.schema";
 import { UnauthorizedException } from "../exceptions/unauthorized.exception";
+import type { UserRepository } from "../repositories/user.repository";
+import type { CreateUserDTO } from "../schemas/create-user.schema";
+import { InjectionTokens } from "../utils/injection-tokens";
 
 @singleton()
 export class UserService {

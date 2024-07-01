@@ -10,7 +10,8 @@ export const createPatientSchema = z.object({
 			birthDate: z
 				.string()
 				.date()
-				.transform((value) => new Date(value)).optional(),
+				.transform((value) => new Date(value))
+				.optional(),
 			gender: z.enum(["MALE", "FEMALE", "OTHERS"]).optional(),
 			healthInsuranceId: z.string(),
 		})

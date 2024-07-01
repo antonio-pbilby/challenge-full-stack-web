@@ -1,9 +1,12 @@
 import type { Patient } from "../entities/patient.entity";
 import { PatientModel } from "../models/patient.model";
-import { CreatePatientDTO } from "../schemas/create-patient.schema";
+import type { CreatePatientDTO } from "../schemas/create-patient.schema";
 import type { ListPacientsQuery } from "../schemas/list-patients.schema";
-import { PaginatedResponse, createPaginatedResponse } from "../utils/create-paginated-response";
-import { PatientRepositoryInterface } from "./patient.repository.interface";
+import {
+	type PaginatedResponse,
+	createPaginatedResponse,
+} from "../utils/create-paginated-response";
+import type { PatientRepositoryInterface } from "./patient.repository.interface";
 
 export class PatientRepository implements PatientRepositoryInterface {
 	async create(patient: CreatePatientDTO, auditUser: string): Promise<void> {
@@ -16,7 +19,11 @@ export class PatientRepository implements PatientRepositoryInterface {
 		return;
 	}
 
-	async list({ pageSize = 10, page = 1, name }: ListPacientsQuery): Promise<PaginatedResponse<Patient>> {
+	async list({
+		pageSize = 10,
+		page = 1,
+		name,
+	}: ListPacientsQuery): Promise<PaginatedResponse<Patient>> {
 		const skip = (page - 1) * pageSize;
 
 		const filter = {
@@ -29,7 +36,10 @@ export class PatientRepository implements PatientRepositoryInterface {
 			PatientModel.countDocuments(filter),
 		]);
 
-		const mappedPatients = patients.map((patient) => ({...patient.toObject(), _id: String(patient.id)}));
+		const mappedPatients = patients.map((patient) => ({
+			...patient.toObject(),
+			_id: String(patient.id),
+		}));
 
 		return createPaginatedResponse(mappedPatients, {
 			page,
@@ -44,11 +54,15 @@ export class PatientRepository implements PatientRepositoryInterface {
 		return patient?.toObject();
 	}
 
-	async find(filter: Partial<Pick<Patient, 'email' | 'document' | 'healthInsuranceId'>>): Promise<Patient | undefined> {
+	async find(
+		filter: Partial<Pick<Patient, "email" | "document" | "healthInsuranceId">>,
+	): Promise<Patient | undefined> {
 		const mongooseFilter = {
-			...(filter.document && {document: filter.document}),
-			...(filter.email && {email: filter.email}),
-			...(filter.healthInsuranceId && {healthInsuranceId: filter.healthInsuranceId}),
+			...(filter.document && { document: filter.document }),
+			...(filter.email && { email: filter.email }),
+			...(filter.healthInsuranceId && {
+				healthInsuranceId: filter.healthInsuranceId,
+			}),
 		};
 
 		const patient = await PatientModel.findOne(mongooseFilter);

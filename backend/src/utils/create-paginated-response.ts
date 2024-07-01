@@ -6,7 +6,7 @@ interface PaginationResponse {
 
 export interface PaginatedResponse<T> {
 	pagination: PaginationResponse;
-	data: T[]
+	data: T[];
 }
 
 export const createPaginatedResponse = <T>(

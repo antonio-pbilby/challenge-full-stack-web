@@ -1,9 +1,9 @@
 import type { NextFunction, Request, Response } from "express";
 import { inject, singleton } from "tsyringe";
-import type { PatientService } from "../services/patient.service";
-import { InjectionTokens } from "../utils/injection-tokens";
 import type { RequestWithUser } from "../interfaces/request-with-user.interface";
 import type { ListPacientsQuery } from "../schemas/list-patients.schema";
+import type { PatientService } from "../services/patient.service";
+import { InjectionTokens } from "../utils/injection-tokens";
 
 @singleton()
 export class PatientController {
