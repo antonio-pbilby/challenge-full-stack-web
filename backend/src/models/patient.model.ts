@@ -16,15 +16,12 @@ const patientSchema = new Schema({
 	},
 	phone: {
 		type: String,
-		required: true,
 	},
 	birthDate: {
 		type: Date,
-		required: true,
 	},
 	gender: {
 		type: String,
-		required: true,
 	},
 	healthInsuranceId: {
 		type: String,

@@ -6,12 +6,12 @@ export const createPatientSchema = z.object({
 			name: z.string(),
 			document: z.string(),
 			email: z.string().email(),
-			phone: z.string(),
+			phone: z.string().optional(),
 			birthDate: z
 				.string()
 				.date()
-				.transform((value) => new Date(value)),
-			gender: z.enum(["MALE", "FEMALE", "OTHERS"]),
+				.transform((value) => new Date(value)).optional(),
+			gender: z.enum(["MALE", "FEMALE", "OTHERS"]).optional(),
 			healthInsuranceId: z.string(),
 		})
 		.strict(),

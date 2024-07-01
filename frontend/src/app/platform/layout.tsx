@@ -30,7 +30,7 @@ export default function PlatformLayout({ children }: { children: ReactNode }) {
             {routes.map(({ label, path }) => {
               return (
                 <li className="flex justify-between relative" key={path}>
-                  <Link href={path} className={`w-full p-2 flex justify-between hover:bg-slate-200 ${pathName === path ? 'bg-slate-200' : ''}`}>
+                  <Link href={path} className={`w-full p-2 flex justify-between hover:bg-slate-200 ${pathName.includes(path) ? 'bg-slate-200' : ''}`}>
                     <span>{label}</span>
                     <span>{'>'}</span>
                   </Link>
@@ -40,7 +40,7 @@ export default function PlatformLayout({ children }: { children: ReactNode }) {
           </ul>
         </nav>
       </aside>
-      <main className="flex-1 py-4 px-72">
+      <main className="flex-1 py-4 max-w-[900px] mx-auto">
         {children}
       </main>
     </div>
