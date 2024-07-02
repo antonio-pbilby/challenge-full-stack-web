@@ -1,21 +1,11 @@
 'use client'
 import { Button } from "@/components/Button";
 import { Input } from "@/components/Input";
-import { api } from "@/utils/axios";
+import { useAuth } from "@/hooks/use-auth";
+import { LoginInputs, loginSchema } from "@/schemas/login.schema";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useMutation } from "@tanstack/react-query";
-import { AxiosError } from "axios";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
 import { SubmitHandler, useForm } from "react-hook-form";
-import { z } from "zod";
-
-const loginSchema = z.object({
-  email: z.string().email(),
-  password: z.string(),
-});
-
-type LoginInputs = z.infer<typeof loginSchema>;
 
 export default function Login() {
   const { register, handleSubmit, formState: { errors } } = useForm<LoginInputs>({
@@ -26,22 +16,7 @@ export default function Login() {
     }
   });
 
-  const router = useRouter();
-
-  const { mutate: login } = useMutation({
-    mutationFn: async (data: LoginInputs) => {
-      await api.post('/login', data);
-    },
-    onSuccess: () => {
-      router.push('/platform/patients');
-    },
-    onError: (error) => {
-      if (error instanceof AxiosError) {
-        return alert(`Failed to login. ${error.response?.data.message}`)
-      }
-      return alert('Failed to login');
-    }
-  })
+  const { login } = useAuth();
 
   const onSubmit: SubmitHandler<LoginInputs> = (data) => {
     login(data);
