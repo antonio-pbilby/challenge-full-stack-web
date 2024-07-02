@@ -36,4 +36,18 @@ export class UserController {
 			next(err);
 		}
 	}
+
+	async logout(req: Request, res: Response, next: NextFunction) {
+		try {
+			return res
+				.cookie("token", '', {
+					expires: new Date(Date.now()),
+					httpOnly: true,
+					domain: config.COOKIE_DOMAIN,
+				})
+				.end();
+		} catch (err) {
+			next(err);
+		}
+	}
 }

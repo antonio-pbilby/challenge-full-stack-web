@@ -51,3 +51,8 @@ router.delete(
 	validateRequest(deletePatientSchema),
 	patientController.delete.bind(patientController),
 );
+
+router.post(
+	"/logout",
+	userController.logout.bind(userController)
+)
