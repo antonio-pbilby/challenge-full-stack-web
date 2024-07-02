@@ -1,6 +1,6 @@
 import { Patient } from "../../src/entities/patient.entity";
+import { PaginatedResponse } from "../../src/interfaces/pagination.interface";
 import { PatientRepositoryInterface } from "../../src/repositories/patient.repository.interface";
-import { PaginatedResponse } from "../../src/utils/create-paginated-response";
 
 export class FakePatientRepository implements PatientRepositoryInterface {
 	async create(): Promise<void> {
