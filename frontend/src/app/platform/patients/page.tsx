@@ -9,6 +9,8 @@ import { useState } from "react";
 import { Trash } from 'lucide-react'
 import { Button } from "@/components/ui/button";
 import { AxiosError } from "axios";
+import { useDebounce } from 'use-debounce'
+import { formatDate } from "@/utils/format-date";
 
 interface Patients {
   _id: string;
@@ -33,19 +35,22 @@ export default function PatientsPage() {
     page: 1,
     pageSize: 5
   });
+  const [nameFilter, setNameFilter] = useState('');
+  const [nameDebounced] = useDebounce(nameFilter, 300);
 
   const { data: patientsResponse, isLoading, isFetched } = useQuery<PatientsResponse>({
     queryFn: async () => {
       const patients = await api.get('/patients', {
         params: {
           page: pagination.page,
-          pageSize: pagination.pageSize
+          pageSize: pagination.pageSize,
+          name: nameDebounced
         }
       });
 
       return patients.data;
     },
-    queryKey: ['patients', pagination.page, pagination.pageSize]
+    queryKey: ['patients', pagination.page, pagination.pageSize, nameDebounced]
   });
 
   const totalPages = isFetched && patientsResponse?.pagination && Math.ceil(patientsResponse?.pagination.totalItems / pagination.pageSize);
@@ -74,7 +79,7 @@ export default function PatientsPage() {
         <h1 className="text-2xl text-lime-700 mb-4">Patients</h1>
         <Link href="/platform/patients/create" className="bg-lime-700 text-white p-2 rounded-md hover:brightness-110">New Patient</Link>
       </div>
-      <Input.Field placeholder="Digite sua busca..." className="border-2 p-2" />
+      <Input.Field placeholder="Digite sua busca..." className="border-2 p-2" value={nameFilter} onChange={(e) => setNameFilter(e.target.value)} />
 
       <Table>
         <TableHeader>
@@ -117,7 +122,7 @@ export default function PatientsPage() {
           {isFetched && !!patientsResponse?.data?.length && patientsResponse?.data.map(({ birthDate, gender, healthInsuranceId, _id: id, name }) => {
             return (<TableRow key={id}>
               <TableCell>{name}</TableCell>
-              <TableCell>{birthDate}</TableCell>
+              <TableCell>{formatDate(birthDate)}</TableCell>
               <TableCell>{gender}</TableCell>
               <TableCell>{healthInsuranceId}</TableCell>
               <TableCell>
