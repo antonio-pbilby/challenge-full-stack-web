@@ -46,7 +46,6 @@ export default function Register() {
 
   const { mutate: createAccount } = useMutation({
     mutationFn: async (data: RegisterInputs) => {
-      console.log('foi no react query')
       await api.post('/user', data);
     },
     onSuccess: () => {
