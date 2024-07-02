@@ -16,7 +16,7 @@ const start = async () => {
 	app.use(
 		cors({
 			credentials: true,
-			origin: "http://localhost:3002",
+			origin: true,
 		}),
 	);
 	app.use(json());
