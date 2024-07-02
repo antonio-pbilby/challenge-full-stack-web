@@ -1,9 +1,9 @@
 import type { Patient } from "../entities/patient.entity";
+import { PaginatedResponse } from "../interfaces/pagination.interface";
 import { PatientModel } from "../models/patient.model";
 import type { CreatePatientDTO } from "../schemas/create-patient.schema";
 import type { ListPacientsQuery } from "../schemas/list-patients.schema";
 import {
-	type PaginatedResponse,
 	createPaginatedResponse,
 } from "../utils/create-paginated-response";
 import type { PatientRepositoryInterface } from "./patient.repository.interface";

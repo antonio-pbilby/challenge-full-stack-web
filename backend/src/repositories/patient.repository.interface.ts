@@ -1,7 +1,7 @@
 import type { Patient } from "../entities/patient.entity";
+import { PaginatedResponse } from "../interfaces/pagination.interface";
 import type { CreatePatientDTO } from "../schemas/create-patient.schema";
 import type { ListPacientsQuery } from "../schemas/list-patients.schema";
-import type { PaginatedResponse } from "../utils/create-paginated-response";
 
 export interface PatientRepositoryInterface {
 	create(patient: CreatePatientDTO, auditUser: string): Promise<void>;
